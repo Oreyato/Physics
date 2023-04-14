@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "../Shape.h"
 #include "../Intersections.h"
+#include "../Contact.h"
 
 
 /*
@@ -90,12 +91,12 @@ void Scene::Update( const float dt_sec ) {
 			Body& bodyA = bodies[i];
 			Body& bodyB = bodies[j];
 
-			// Ignore collisions for infinite mass bodies
+			// Ignore collisions for bodies with infinite mass
 			if (bodyA.inverseMass == 0.0f && bodyB.inverseMass == 0.0f) continue;
 
-			if (Intersections::Intersect(bodyA, bodyB)) {
-				bodyA.linearVelocity.Zero();
-				bodyB.linearVelocity.Zero();
+			Contact contact;
+			if (Intersections::Intersect(bodyA, bodyB, contact)) {
+				Contact::ResolveContact(contact)
 			}
 		}
 	}
