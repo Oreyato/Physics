@@ -84,7 +84,7 @@ void Scene::Update( const float dt_sec ) {
 		// I == dp, so F == dp/dt <=> dp = F * dt
 		// <=> I = F * dt <=> I = m * g * dt
 		Vec3 impulseGravity = Vec3(0, 0, - GRAVITY_AMOUNT) * mass * dt_sec;
-		body.AddImpulseLinear(impulseGravity);
+		body.ApplyImpulseLinear(impulseGravity);
 	}
 
 	// -- COLLISIONS CHECK --
@@ -106,7 +106,6 @@ void Scene::Update( const float dt_sec ) {
 	// -- POSITION UPDATE --
 	for (int i = 0; i < bodies.size(); i++)
 	{
-		// Linear velocity
-		bodies[i].position += bodies[i].linearVelocity * dt_sec;
+		bodies[i].Update(dt_sec);
 	}
 }

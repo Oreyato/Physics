@@ -78,6 +78,7 @@
     <ClCompile Include="Contact.cpp">
       <Filter>code\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Shape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\application.h">

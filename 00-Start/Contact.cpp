@@ -19,8 +19,8 @@ void Contact::ResolveContact(Contact& contact)
 	const float impulseValueJ = -(1.0f + elasticity) * velAB.Dot(n) / (invMassA + invMassB);
 	const Vec3 impulse = n * impulseValueJ;
 
-	a->AddImpulseLinear(impulse);
-	b->AddImpulseLinear(impulse * -1.0f);
+	a->ApplyImpulseLinear(impulse);
+	b->ApplyImpulseLinear(impulse * -1.0f);
 	//^ Collision impulse ============================================
 
 	// If object are interpenetrating, use this to set them on contact
