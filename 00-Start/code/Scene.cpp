@@ -60,9 +60,16 @@ Scene::Update
 ====================================================
 */
 void Scene::Update( const float dt_sec ) {
-	// TODO: Add code
+	// -- GRAVITY --
+	for (int i = 0; i < bodies.size(); i++) 
+	{
+		bodies[i].linearVelocity += Vec3(0, 0, -10) * dt_sec;
+	}
+
+	// -- VELOCITY --
+	// Linear velocity
 	for (int i = 0; i < bodies.size(); i++)
 	{
-		//
+		bodies[i].position += bodies[i].linearVelocity * dt_sec;
 	}
 }
