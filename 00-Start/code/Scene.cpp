@@ -61,4 +61,8 @@ Scene::Update
 */
 void Scene::Update( const float dt_sec ) {
 	// TODO: Add code
+	for (int i = 0; i < bodies.size(); i++)
+	{
+		//
+	}
 }

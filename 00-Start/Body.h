@@ -8,6 +8,8 @@ class Body
 public:
 	Vec3 position;
 	Quat orientation;
+	Vec3 linearVelocity;
+
 	Shape* shape;
 
 	Vec3 GetCenterOfMassWorldSpace() const;
