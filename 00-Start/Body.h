@@ -10,6 +10,7 @@ public:
 	Quat orientation;
 	Vec3 linearVelocity;
 	float inverseMass;
+	float elasticity;
 
 	Shape* shape;
 

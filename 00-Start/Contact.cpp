@@ -9,10 +9,14 @@ void Contact::ResolveContact(Contact& contact)
 	const float invMassA = a->inverseMass;
 	const float invMassB = b->inverseMass;
 
+	const float elasticityA = a->elasticity;
+	const float elasticityB = b->elasticity;
+	const float elasticity = elasticityA * elasticityB;
+
 	//v Collision impulse ============================================
 	const Vec3& n = contact.normal;
 	const Vec3& velAB = a->linearVelocity - b->linearVelocity;
-	const float impulseValueJ = -2.0f * velAB.Dot(n) / (invMassA + invMassB);
+	const float impulseValueJ = -(1.0f + elasticity) * velAB.Dot(n) / (invMassA + invMassB);
 	const Vec3 impulse = n * impulseValueJ;
 
 	a->AddImpulseLinear(impulse);
