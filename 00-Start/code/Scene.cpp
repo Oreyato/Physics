@@ -45,13 +45,22 @@ Scene::Initialize
 ====================================================
 */
 void Scene::Initialize() {
-	Body body;
-	body.position = Vec3( 0, 0, 0 );
-	body.orientation = Quat( 0, 0, 0, 1 );
-	body.shape = new ShapeSphere( 1.0f );
-	bodies.push_back( body );
+	// -- BODIES --
+	// Ball
+	Body ball;
+	ball.position = Vec3( 0, 0, 10 );
+	ball.orientation = Quat( 0, 0, 0, 1 );
+	ball.shape = new ShapeSphere( 1.0f );
+	ball.inverseMass = 1.0f;
+	bodies.push_back(ball);
 
-	// TODO: Add code
+	// -- GROUND --
+	Body earth;
+	earth.position = Vec3(0, 0, -1000);
+	earth.orientation = Quat(0, 0, 0, 1);
+	earth.shape = new ShapeSphere(1000.0f);
+	earth.inverseMass = 0.0f;
+	bodies.push_back(earth);
 }
 
 /*
@@ -63,13 +72,21 @@ void Scene::Update( const float dt_sec ) {
 	// -- GRAVITY --
 	for (int i = 0; i < bodies.size(); i++) 
 	{
-		bodies[i].linearVelocity += Vec3(0, 0, -10) * dt_sec;
+		Body& body = bodies[i];
+
+		float mass = 1.0f / body.inverseMass;
+
+		// Gravity needs to be an impulse I
+		// I == dp, so F == dp/dt <=> dp = F * dt
+		// <=> I = F * dt <=> I = m * g * dt
+		Vec3 impulseGravity = Vec3(0, 0, - GRAVITY_AMOUNT) * mass * dt_sec;
+		body.AddImpulseLinear(impulseGravity);
 	}
 
-	// -- VELOCITY --
-	// Linear velocity
+	// -- POSITION UPDATE --
 	for (int i = 0; i < bodies.size(); i++)
 	{
+		// Linear velocity
 		bodies[i].position += bodies[i].linearVelocity * dt_sec;
 	}
 }

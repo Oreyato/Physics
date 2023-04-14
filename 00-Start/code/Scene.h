@@ -21,5 +21,8 @@ public:
 	void Update( const float dt_sec );	
 
 	std::vector<Body> bodies;
+
+private:
+	const float GRAVITY_AMOUNT{ 10.0f };
 };
 

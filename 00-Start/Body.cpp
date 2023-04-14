@@ -31,3 +31,11 @@ Vec3 Body::BodySpaceToWorldSpace(const Vec3& bodyPoint)
 
 	return worldSpace;
 }
+
+void Body::AddImpulseLinear(const Vec3& impulse)
+{
+	if (inverseMass == 0.0f) return;
+
+	// dv = J / m
+	linearVelocity += impulse * inverseMass;
+}
