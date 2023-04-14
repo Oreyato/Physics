@@ -51,12 +51,12 @@ void Contact::ResolveContact(Contact& contact)
 	// Find the tengent direction of the velocity with respect to the normal of the collision
 	const Vec3 velTengent = velAB - velNormal;
 	// Get the tengential velocities relative to the other body
-	Vec3 relativVelTengent = velTengent;
-	relativVelTengent.Normalize();
+	Vec3 relativeVelTengent = velTengent;
+	relativeVelTengent.Normalize();
 
-	const Vec3 inertiaA = (inverseWorldInertiaA * rA.Cross(relativVelTengent)).Cross(rA);
-	const Vec3 inertiaB = (inverseWorldInertiaB * rB.Cross(relativVelTengent)).Cross(rB);
-	const float inverseInertia = (inertiaA + inertiaB).Dot(relativVelTengent);
+	const Vec3 inertiaA = (inverseWorldInertiaA * rA.Cross(relativeVelTengent)).Cross(rA);
+	const Vec3 inertiaB = (inverseWorldInertiaB * rB.Cross(relativeVelTengent)).Cross(rB);
+	const float inverseInertia = (inertiaA + inertiaB).Dot(relativeVelTengent);
 
 	// Tengential impulse for friction
 	const float reducedMass = 1.0f / (a->inverseMass + b->inverseMass + inverseInertia);
@@ -66,7 +66,6 @@ void Contact::ResolveContact(Contact& contact)
 	b->ApplyImpulse(ptOnB, impulseFriction * 1.0f);
 
 	//^ Friction-caused impulse ======================================
-	
 
 	// If object are interpenetrating, use this to set them on contact
 	const float tA = invMassA / (invMassA + invMassB);
