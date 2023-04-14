@@ -18,7 +18,9 @@ void Contact::ResolveContact(Contact& contact)
 
 	const Mat3 inverseWorldInertiaA = a->GetInverseInertiaTensorWorldSpace();
 	const Mat3 inverseWorldInertiaB = b->GetInverseInertiaTensorWorldSpace();
+
 	const Vec3 n = contact.normal;
+
 	const Vec3 rA = ptOnA - a->GetCenterOfMassWorldSpace();
 	const Vec3 rB = ptOnB - b->GetCenterOfMassWorldSpace();
 
@@ -37,7 +39,34 @@ void Contact::ResolveContact(Contact& contact)
 
 	a->ApplyImpulse(ptOnA, impulse * -1.0f); 
 	b->ApplyImpulse(ptOnB, impulse * 1.0f);
+
 	//^ Collision impulse ============================================
+	//v Friction-caused impulse ======================================
+	const float frictionA = a->friction;
+	const float frictionB = b->friction;
+	const float friction = frictionA * frictionB;
+
+	// Find the normal direction of the velocity with respect to the normal of the collision
+	const Vec3 velNormal = n * n.Dot(velAB);
+	// Find the tengent direction of the velocity with respect to the normal of the collision
+	const Vec3 velTengent = velAB - velNormal;
+	// Get the tengential velocities relative to the other body
+	Vec3 relativVelTengent = velTengent;
+	relativVelTengent.Normalize();
+
+	const Vec3 inertiaA = (inverseWorldInertiaA * rA.Cross(relativVelTengent)).Cross(rA);
+	const Vec3 inertiaB = (inverseWorldInertiaB * rB.Cross(relativVelTengent)).Cross(rB);
+	const float inverseInertia = (inertiaA + inertiaB).Dot(relativVelTengent);
+
+	// Tengential impulse for friction
+	const float reducedMass = 1.0f / (a->inverseMass + b->inverseMass + inverseInertia);
+	const Vec3 impulseFriction = velTengent * reducedMass * friction;
+	// Apply kinetic friction
+	a->ApplyImpulse(ptOnA, impulseFriction * -1.0f);
+	b->ApplyImpulse(ptOnB, impulseFriction * 1.0f);
+
+	//^ Friction-caused impulse ======================================
+	
 
 	// If object are interpenetrating, use this to set them on contact
 	const float tA = invMassA / (invMassA + invMassB);

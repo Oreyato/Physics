@@ -55,6 +55,9 @@ void Scene::Initialize() {
 	ball.shape = new ShapeSphere( 1.0f );
 	ball.inverseMass = 1.0f;
 	ball.elasticity = 0.5f;
+	ball.friction = 0.5f;
+	ball.linearVelocity = Vec3(1, 0, 0);
+
 	bodies.push_back(ball);
 
 	// -- GROUND --
@@ -64,6 +67,8 @@ void Scene::Initialize() {
 	earth.shape = new ShapeSphere(1000.0f);
 	earth.inverseMass = 0.0f;
 	earth.elasticity = 1.0f;
+	earth.friction = 0.5f;
+
 	bodies.push_back(earth);
 }
 
