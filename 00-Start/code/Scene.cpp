@@ -3,6 +3,7 @@
 //
 #include "Scene.h"
 #include "../Shape.h"
+#include "../Intersections.h"
 
 
 /*
@@ -81,6 +82,22 @@ void Scene::Update( const float dt_sec ) {
 		// <=> I = F * dt <=> I = m * g * dt
 		Vec3 impulseGravity = Vec3(0, 0, - GRAVITY_AMOUNT) * mass * dt_sec;
 		body.AddImpulseLinear(impulseGravity);
+	}
+
+	// -- COLLISIONS CHECK --
+	for (int i = 0; i < bodies.size(); i++) {
+		for (int j = i + 1; j < bodies.size(); j++) {
+			Body& bodyA = bodies[i];
+			Body& bodyB = bodies[j];
+
+			// Ignore collisions for infinite mass bodies
+			if (bodyA.inverseMass == 0.0f && bodyB.inverseMass == 0.0f) continue;
+
+			if (Intersections::Intersect(bodyA, bodyB)) {
+				bodyA.linearVelocity.Zero();
+				bodyB.linearVelocity.Zero();
+			}
+		}
 	}
 
 	// -- POSITION UPDATE --

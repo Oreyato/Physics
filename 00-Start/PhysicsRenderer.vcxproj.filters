@@ -72,6 +72,9 @@
     <ClCompile Include="Body.cpp">
       <Filter>code\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Intersections.cpp">
+      <Filter>code\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\application.h">
@@ -138,6 +141,9 @@
       <Filter>code\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Shape.h">
+      <Filter>code\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersections.h">
       <Filter>code\Physics</Filter>
     </ClInclude>
   </ItemGroup>
