@@ -75,3 +75,18 @@ void Contact::ResolveContact(Contact& contact)
 	a->position += d * tA;
 	b->position -= d * tB;
 }
+
+int Contact::CompareContact(const void* p1, const void* p2)
+{
+	const Contact& a = *(Contact*)p1;
+	const Contact& b = *(Contact*)p1;
+
+	if (a.timeOfImpact < b.timeOfImpact) {
+		return -1;
+	}
+	else if (a.timeOfImpact == b.timeOfImpact) {
+		return -0;
+	}
+
+	return 1;
+}

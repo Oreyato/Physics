@@ -92,7 +92,11 @@ void Scene::Update( const float dt_sec ) {
 		body.ApplyImpulseLinear(impulseGravity);
 	}
 
-	// -- COLLISIONS CHECK --
+	//v Collisions check =============================================
+	int numContacts = 0;
+	const int maxContacts = bodies.size() * bodies.size();
+	Contact* contacts = (Contact*)alloca(sizeof(Contact) * maxContacts);
+
 	for (int i = 0; i < bodies.size(); i++) {
 		for (int j = i + 1; j < bodies.size(); j++) {
 			Body& bodyA = bodies[i];
@@ -103,14 +107,48 @@ void Scene::Update( const float dt_sec ) {
 
 			Contact contact;
 			if (Intersections::Intersect(bodyA, bodyB, dt_sec, contact)) {
-				Contact::ResolveContact(contact);
+				contacts[numContacts] = contact;
+				++numContacts;
 			}
 		}
 	}
 
-	// -- POSITION UPDATE --
-	for (int i = 0; i < bodies.size(); i++)
-	{
-		bodies[i].Update(dt_sec);
+	// Sort times of impact
+	if (numContacts > 1) {
+		qsort(contacts, numContacts, sizeof(Contact), Contact::CompareContact);
 	}
+
+	// Contact resolve in order
+	float accumulatedTime = 0.0f;
+	for (int i = 0; i < numContacts; ++i)
+	{
+		Contact& contact = contacts[i];
+		const float dt = contact.timeOfImpact - accumulatedTime;
+		Body* bodyA = contact.a;
+		Body* bodyB = contact.b;
+		
+		// Skip body with infinite mass
+		if (bodyA->inverseMass == 0.0f && bodyB->inverseMass == 0.0f) continue;
+
+		// Update position
+		for (int j = 0; j < bodies.size(); ++j) {
+			bodies[j].Update(dt);
+		}
+
+		Contact::ResolveContact(contact);
+		accumulatedTime += dt;
+	}
+	//^ Collisions check =============================================
+
+	// Other physics behaviours, outside collisions
+	// Update the positions for the rest of this frame's time
+	const float timeRemaining = dt_sec - accumulatedTime;
+	if (timeRemaining > 0.0f)
+	{
+		// Position update
+		for (int i = 0; i < bodies.size(); ++i) {
+			bodies[i].Update(timeRemaining);
+		}
+	}
+
 }
