@@ -60,13 +60,38 @@ void Scene::Initialize() {
 
 	bodies.push_back(ball);
 
+	// Fast ball
+	Body fast;
+	fast.position = Vec3(-3, 0, 1);
+	fast.orientation = Quat(0, 0, 0, 1);
+	fast.shape = new ShapeSphere(1.0f);
+	fast.inverseMass = 1.0f;
+	fast.elasticity = 0.5f;
+	fast.friction = 0.5f;
+	fast.linearVelocity = Vec3(500, 0, 0);
+
+	bodies.push_back(fast);
+
+	// Immobile ball
+	Body immobile;
+	immobile.position = Vec3(0, 0, 3);
+	immobile.orientation = Quat(0, 0, 0, 1);
+	immobile.shape = new ShapeSphere(1.0f);
+	immobile.inverseMass = 1.0f;
+	immobile.elasticity = 0.5f;
+	immobile.friction = 0.5f;
+	immobile.linearVelocity = Vec3(0, 0, 0);
+
+	bodies.push_back(immobile);
+
+
 	// -- GROUND --
 	Body earth;
 	earth.position = Vec3(0, 0, -1000);
 	earth.orientation = Quat(0, 0, 0, 1);
 	earth.shape = new ShapeSphere(1000.0f);
 	earth.inverseMass = 0.0f;
-	earth.elasticity = 1.0f;
+	earth.elasticity = 0.99f;
 	earth.friction = 0.5f;
 
 	bodies.push_back(earth);
