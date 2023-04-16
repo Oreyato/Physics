@@ -122,24 +122,24 @@ void Scene::Update( const float dt_sec ) {
 	std::vector<CollisionPair> collisionPairs;
 	BroadPhase(bodies.data(), bodies.size(), collisionPairs, dt_sec);
 
-	//v Collisions check =============================================
+	//v Collisions check (narrow phase) ==============================
 	int numContacts = 0;
 	const int maxContacts = bodies.size() * bodies.size();
 	Contact* contacts = (Contact*)_malloca(sizeof(Contact) * maxContacts);
 
-	for (int i = 0; i < bodies.size(); i++) {
-		for (int j = i + 1; j < bodies.size(); j++) {
-			Body& bodyA = bodies[i];
-			Body& bodyB = bodies[j];
+	for (int i = 0; i < collisionPairs.size(); ++i)
+	{
+		const CollisionPair& pair = collisionPairs[i];
+		Body& bodyA = bodies[pair.a];
+		Body& bodyB = bodies[pair.b];
 
-			// Ignore collisions for bodies with infinite mass
-			if (bodyA.inverseMass == 0.0f && bodyB.inverseMass == 0.0f) continue;
+		// Ignore collisions for bodies with infinite mass
+		if (bodyA.inverseMass == 0.0f && bodyB.inverseMass == 0.0f) continue;
 
-			Contact contact;
-			if (Intersections::Intersect(bodyA, bodyB, dt_sec, contact)) {
-				contacts[numContacts] = contact;
-				++numContacts;
-			}
+		Contact contact;
+		if (Intersections::Intersect(bodyA, bodyB, dt_sec, contact)) {
+			contacts[numContacts] = contact;
+			++numContacts;
 		}
 	}
 
