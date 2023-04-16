@@ -5,6 +5,7 @@
 #include "../Shape.h"
 #include "../Intersections.h"
 #include "../Contact.h"
+#include "../Broadphase.h"
 
 
 /*
@@ -116,6 +117,10 @@ void Scene::Update( const float dt_sec ) {
 		Vec3 impulseGravity = Vec3(0, 0, - GRAVITY_AMOUNT) * mass * dt_sec;
 		body.ApplyImpulseLinear(impulseGravity);
 	}
+
+	// -- BROAD PHASE --
+	std::vector<CollisionPair> collisionPairs;
+	BroadPhase(bodies.data(), bodies.size(), collisionPairs, dt_sec);
 
 	//v Collisions check =============================================
 	int numContacts = 0;
