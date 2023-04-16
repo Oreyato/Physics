@@ -102,7 +102,7 @@ void Scene::Update( const float dt_sec ) {
 			if (bodyA.inverseMass == 0.0f && bodyB.inverseMass == 0.0f) continue;
 
 			Contact contact;
-			if (Intersections::Intersect(bodyA, bodyB, contact)) {
+			if (Intersections::Intersect(bodyA, bodyB, dt_sec, contact)) {
 				Contact::ResolveContact(contact);
 			}
 		}
