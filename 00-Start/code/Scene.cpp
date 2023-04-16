@@ -95,7 +95,7 @@ void Scene::Update( const float dt_sec ) {
 	//v Collisions check =============================================
 	int numContacts = 0;
 	const int maxContacts = bodies.size() * bodies.size();
-	Contact* contacts = (Contact*)alloca(sizeof(Contact) * maxContacts);
+	Contact* contacts = (Contact*)_malloca(sizeof(Contact) * maxContacts);
 
 	for (int i = 0; i < bodies.size(); i++) {
 		for (int j = i + 1; j < bodies.size(); j++) {
