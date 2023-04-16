@@ -48,6 +48,7 @@ Scene::Initialize
 ====================================================
 */
 void Scene::Initialize() {
+	/* Previous test scene 
 	// -- BODIES --
 	// Ball
 	Body ball;
@@ -96,6 +97,44 @@ void Scene::Initialize() {
 	earth.friction = 0.5f;
 
 	bodies.push_back(earth);
+	*/
+
+	Body body;
+	for (int i = 0; i < 6; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			float radius = 0.5f;
+			float x = (i - 1) * radius * 1.5f;
+			float y = (j - 1) * radius * 1.5f;
+			body.position = Vec3(x, y, 10);
+			body.orientation = Quat(0, 0, 0, 1);
+			body.shape = new ShapeSphere(radius);
+			body.inverseMass = 1.0f;
+			body.elasticity = 0.5f;
+			body.friction = 0.5f;
+			body.linearVelocity.Zero();
+			bodies.push_back(body);
+		}
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			float radius = 80.0f;
+			float x = (i - 1) * radius * 0.25f;
+			float y = (j - 1) * radius * 0.25f;
+			body.position = Vec3(x, y, -radius);
+			body.orientation = Quat(0, 0, 0, 1);
+			body.shape = new ShapeSphere(radius);
+			body.inverseMass = 0.0f;
+			body.elasticity = 0.99f;
+			body.friction = 0.5f;
+			bodies.push_back(body);
+		}
+	}
+
 }
 
 /*
